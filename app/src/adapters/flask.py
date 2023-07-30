@@ -6,8 +6,8 @@ from ..repository.repository import ReportRepository
 
 APP = Flask(__name__)
 
-class FlaskApp(App):
 
+class FlaskApp(App):
     storage: ReportRepository
 
     def __init__(self, storage: ReportRepository):
@@ -43,17 +43,14 @@ class FlaskApp(App):
                 else:
                     return dicts_list
 
-    def run(
-            self,
-            host: str = "0.0.0.0",
-            debug: bool = False
-            ):
-        self.app.run(host=host, debug=debug) 
+    def run(self, host: str = "0.0.0.0", debug: bool = False):
+        self.app.run(host=host, debug=debug)
 
 
 def _is_digit(n: str) -> bool:
+    """Check if string is translatable to integer."""
     try:
         int(n)
         return True
     except ValueError:
-        return  False
+        return False

@@ -6,13 +6,11 @@ from ..repository.repository import ReportRepository
 
 
 class MongoReportRepository(ReportRepository):
+    """Storage for Report objects, Mongo implementation."""
 
     def __init__(
-            self,
-            mongo_host: str = "mongo",
-            mongo_port: int = 27017,
-            db_name: str = "my_db"
-            ):
+        self, mongo_host: str = "mongo", mongo_port: int = 27017, db_name: str = "my_db"
+    ):
         self.client = MongoClient(mongo_host, mongo_port)
         self.db = self.client[db_name]
 
@@ -22,10 +20,7 @@ class MongoReportRepository(ReportRepository):
         self.db["problem_records"].insert_one(report.to_dict())
 
     def find_reports_by_kv(self, data: dict) -> List[Report]:
-        query = {
-                "$or": [
-                    ]
-                }
+        query = {"$or": []}
         for key in data:
             query["$or"].append({"headers." + key: data[key]})
             query["$or"].append({"body." + key: data[key]})
@@ -41,6 +36,7 @@ class MongoReportRepository(ReportRepository):
 
 
 def _records_to_reports(records) -> List[Report]:
+    """Create list of Report objects from list of DB records."""
     records = [record for record in records]
     reports = []
     for record in records:
@@ -48,10 +44,10 @@ def _records_to_reports(records) -> List[Report]:
             if item not in record:
                 pass
         reports.append(
-                Report(
-                    headers=record["headers"],
-                    body=record["body"],
-                    hash_value=int(record["hash"])
-                    )
-                )
+            Report(
+                headers=record["headers"],
+                body=record["body"],
+                hash_value=int(record["hash"]),
+            )
+        )
     return reports

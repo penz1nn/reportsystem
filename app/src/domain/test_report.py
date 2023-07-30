@@ -4,7 +4,6 @@ from .report import Report
 
 
 class TestReport(unittest.TestCase):
-
     def test_init(self):
         headers = {"sample": "text"}
         body = {"value1": 200, "value2": "secret", "value3": True}
@@ -29,66 +28,26 @@ class TestReport(unittest.TestCase):
 
     def test_equal(self):
         headers = {"sample": "text"}
-        body = {
-                "key1": True,
-                "key2": 2,
-                "key3": "three"
-                }
-        report1 = Report(
-                headers = headers,
-                body = body
-                )
-        report2 = Report(
-                headers=headers,
-                body=body,
-                hash_value=12038192839219
-                )
-        self.assertEqual(
-                report1,
-                Report(
-                    headers=headers,
-                    body=body
-                    )
-                )
-        self.assertNotEqual(
-                report1,
-                report2
-                )
-    
+        body = {"key1": True, "key2": 2, "key3": "three"}
+        report1 = Report(headers=headers, body=body)
+        report2 = Report(headers=headers, body=body, hash_value=12038192839219)
+        self.assertEqual(report1, Report(headers=headers, body=body))
+        self.assertNotEqual(report1, report2)
+
     def test_to_dict(self):
-        headers={
-                "some_data": "some_value",
-                "more_data": "another_value"
-                }
-        body={
-                "value1": 1,
-                "value2": "string",
-                "value3": False
-                }
+        headers = {"some_data": "some_value", "more_data": "another_value"}
+        body = {"value1": 1, "value2": "string", "value3": False}
         hash_value = 123123123
-        report = Report(
-                headers=headers,
-                body=body,
-                hash_value=hash_value
-                )
+        report = Report(headers=headers, body=body, hash_value=hash_value)
         self.assertEqual(
-                report.to_dict(),
-                {
-                    "headers": headers,
-                    "body": body,
-                    "hash": hash_value
-                    }
-                )
+            report.to_dict(), {"headers": headers, "body": body, "hash": hash_value}
+        )
 
     def test_hashing(self):
         """
         order of keys in dicts must not matter for hash
         """
-        kvs = [
-                ["key1", 1],
-                ["key2", 2],
-                ["key3", 3]
-                ]
+        kvs = [["key1", 1], ["key2", 2], ["key3", 3]]
         headers1 = {}
         body1 = {}
         for kv in kvs:
